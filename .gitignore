@@ -1,3 +1,5 @@
 .err-logs/
 *.config
 turtles.data
+installer-util/
+make-installer.lua

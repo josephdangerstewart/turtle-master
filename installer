@@ -1,0 +1,109 @@
+local totalFiles = 0
+local filesDownloaded = 0
+
+local titleText = "Installing application..."
+local progressTemplate = "%s / %s files downloaded"
+
+local function setTotalFiles(n)
+	totalFiles = n
+end
+
+local function clearUI(isError)
+	term.setTextColor(colors.white)
+	term.setBackgroundColor(colors.black)
+	term.clear()
+	term.setCursorPos(1, 1)
+	if not isError then
+		print("Application is installed!")
+	end
+end
+
+local function updateUI()
+	local w, h = term.getSize()
+
+	term.setTextColor(colors.black)
+	term.setBackgroundColor(colors.white)
+	term.clear()
+
+	local progressText = string.format(progressTemplate, filesDownloaded, totalFiles)
+	local titleTextLength = #titleText
+	local progressTextLength = #progressText
+
+	term.setCursorPos(w / 2 - titleTextLength / 2, h / 2 - 1)
+	term.write(titleText)
+	term.setCursorPos(w / 2 - progressTextLength / 2, h / 2)
+	term.write(progressText)
+end
+
+local function getFile(filePath, urlBase)
+	if fs.exists(filePath) then
+		clearUI(true)
+		error(filePath .. " already exists")
+	end
+
+	local response = http.get(urlBase .. filePath)
+	local fileContent = response.readAll()
+	response.close()
+
+	local file = fs.open(filePath, "w")
+	file.write(fileContent)
+	file.close()
+
+	filesDownloaded = filesDownloaded + 1
+	updateUI()
+end
+
+local function makeDirOrThrow(dir)
+	if dir == "/" then
+		return
+	end
+
+	if fs.exists(dir) then
+		clearUI(true)
+		error(dir .. " already exists")
+	else
+		fs.makeDir(dir)
+	end
+end
+
+updateUI()
+
+setTotalFiles(19)
+
+local urlBase = "https://raw.githubusercontent.com/josephdangerstewart/turtle-master/master"
+
+-- Chunk for "/"
+makeDirOrThrow("/")
+getFile("/cobalt", urlBase)
+-- Chunk for "/cobalt-lib/"
+makeDirOrThrow("/cobalt-lib/")
+getFile("/cobalt-lib/surface", urlBase)
+-- Chunk for "/cobalt-ui/"
+makeDirOrThrow("/cobalt-ui/")
+-- Chunk for "/cobalt-ui/elements/"
+makeDirOrThrow("/cobalt-ui/elements/")
+getFile("/cobalt-ui/elements/button.lua", urlBase)
+getFile("/cobalt-ui/elements/checkbox.lua", urlBase)
+getFile("/cobalt-ui/elements/input.lua", urlBase)
+getFile("/cobalt-ui/elements/panel.lua", urlBase)
+getFile("/cobalt-ui/elements/radio.lua", urlBase)
+getFile("/cobalt-ui/elements/text.lua", urlBase)
+getFile("/cobalt-ui/elements/textarea.lua", urlBase)
+getFile("/cobalt-ui/init.lua", urlBase)
+-- Chunk for "/custom-elements/"
+makeDirOrThrow("/custom-elements/")
+getFile("/custom-elements/percentbar.lua", urlBase)
+-- Chunk for "/tm-helpers/"
+makeDirOrThrow("/tm-helpers/")
+getFile("/tm-helpers/config-manager.lua", urlBase)
+getFile("/tm-helpers/messages-display.lua", urlBase)
+getFile("/tm-helpers/modal-manager.lua", urlBase)
+getFile("/tm-helpers/network-manager.lua", urlBase)
+getFile("/tm-helpers/turtle-inventory-display.lua", urlBase)
+getFile("/tm-helpers/turtle-manager.lua", urlBase)
+getFile("/tm-helpers/ui-manager.lua", urlBase)
+getFile("/turtle-master.lua", urlBase)
+
+
+clearUI()
+
