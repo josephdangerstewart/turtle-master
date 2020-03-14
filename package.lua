@@ -1,7 +1,6 @@
 {
 	name = "turtle-master",
 	author = "PossieTV",
-	version = "0.1.0",
 	files = {
 		"/cobalt%-lib/.*",
 		"/cobalt%-ui/.*",
@@ -10,8 +9,6 @@
 		"/turtle%-master%.lua",
 		"/cobalt"
 	},
-	runCommand = {
-		"turtle-master.lua"
-	},
-	contentBaseUrl = "https://raw.githubusercontent.com/josephdangerstewart/turtle-master/master"
+	githubUserName = "josephdangerstewart",
+	githubRepository = "turtle-master",
 }

@@ -49,6 +49,16 @@ function networkManager:receiveMessage(stringMessage, id)
 	end
 end
 
+function networkManager:goTo(turtleId, coords)
+	local messageDto = {
+		protocol = "turtle",
+		command = "goto",
+		coords = coords
+	}
+
+	rednet.send(turtleId, textutils.serialise(messageDto))
+end
+
 function networkManager:togglePause(id)
 	local command = {
 		protocol = "turtle",

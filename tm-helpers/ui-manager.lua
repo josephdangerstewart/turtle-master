@@ -322,6 +322,15 @@ function uiManager:updateSingleTurtlePanel()
 		self.networkManager:togglePause(self.currentTurtle.id)
 	end
 
+	self.singleTurtleElements.gotoButton.onclick = function()
+		self.modalManager:withParams(
+			{ coords = "string" },
+			function(params)
+				self.networkManager:goTo(self.currentTurtle.id, params.coords)
+			end
+		)
+	end
+
 	for i,v in pairs(self.singleTurtleElements.peripherals) do
 		self.singleTurtlePanel:removeChild(v)
 	end
@@ -541,6 +550,15 @@ function uiManager:createTurtlePreview(turtle)
 
 	turtleUiController.pauseButton.onclick = function()
 		self.networkManager:togglePause(turtle.id)
+	end
+
+	turtleUiController.gotoButton.onclick = function()
+		self.modalManager:withParams(
+			{ coords = "string" },
+			function(params)
+				self.networkManager:goTo(turtle.id, params.coords)
+			end
+		)
 	end
 
 	local y = 10
